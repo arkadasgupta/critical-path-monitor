@@ -24,6 +24,10 @@ then projects them against what is actually happening right now.
 
 **→ https://critical-path-monitor.onrender.com/**
 
+It is hosted on Render's free tier, which spins the service down when it is idle.
+If it is cold, the first request wakes it and can take up to a minute — give it a
+moment and reload. Every request after that is fast.
+
 Nothing to set up. Two rack buildouts seed themselves and start running as soon
 as the page loads, so you land on live state. Time is compressed: one simulated
 minute is a few milliseconds, so a buildout that would take eleven hours
@@ -55,3 +59,6 @@ interesting, the design tradeoffs, and what I would build next.
 **[transcripts/](transcripts/)** holds the full Claude Code session that built
 this, including the four subagent sessions, converted from the raw logs to
 readable markdown.
+
+**[demo-trim.mov](demo-trim.mov)** is a short walkthrough of the idea and the
+design decisions behind it.
