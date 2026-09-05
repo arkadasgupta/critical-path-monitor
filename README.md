@@ -95,13 +95,13 @@ A few decisions worth knowing:
   keeps the state machine small. The consequence is that a job reaches `blocked`
   only once its last running task drains, so it settles rather than flipping.
 
-## Known limitation
+## Known limitations
 
-Critical-path analysis assumes unlimited workers, so buffer is an **upper
-bound**: it cannot *predict* delay caused by contention for the worker pool.
-It does, however, *measure* it, because a task that is ready but has no free
-worker gets floored at the current time and its projection slides. Predicting
-contention would need a resource-constrained scheduling simulation, which is out
-of scope here.
+The worker pool is a simulation dial rather than a real constraint — buildout
+capacity is treated as unlimited in practice, which is what lets critical path
+analysis apply cleanly. Starving the pool by setting `MAX_CONCURRENT_TASKS` low
+will show up as delay the analysis did not predict.
 
-State is in memory only. A restart reseeds the demo rather than recovering.
+Tasks cannot fail or be retried; the only interruption modelled is an external
+block. Delay is reported but not attributed to a cause. State is in memory only,
+so a restart reseeds the demo rather than recovering.
