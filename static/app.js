@@ -51,6 +51,8 @@ const el = {
   btnCompute: $('btn-new-compute'),
   btnStorage: $('btn-new-storage'),
   btnDemo: $('btn-demo'),
+  rerunBanner: $('rerun-banner'),
+  btnRerun: $('btn-rerun'),
   dagName: $('dag-name'),
   dagWorkflow: $('dag-workflow'),
   dagState: $('dag-state'),
@@ -455,7 +457,6 @@ function buildDag(job, edges, geo) {
   el.dagSvg.setAttribute('height', geo.height);
   el.dagSvg.setAttribute('viewBox', `0 0 ${geo.width} ${geo.height}`);
 
-  const byId = new Map(job.tasks.map((t) => [t.id, t]));
   const edgeLayer = svgEl('g');
   const nodeLayer = svgEl('g');
   el.dagSvg.appendChild(edgeLayer);
@@ -771,21 +772,35 @@ async function onNodeClick(jobId, taskId) {
 }
 
 async function runDemo() {
-  el.btnDemo.disabled = true;
+  const buttons = [el.btnDemo, el.btnRerun];
+  buttons.forEach((b) => { b.disabled = true; });
   try {
     await api('/api/demo/run', { method: 'POST' });
+    // Hide the banner immediately rather than waiting for the next poll, or it
+    // lingers for up to 500ms over a demo that has already restarted.
+    el.rerunBanner.hidden = true;
     toast('Demo started.', 'ok', 2400);
   } catch (err) {
     toast(`Demo failed: ${err.message}`, 'err');
   } finally {
-    el.btnDemo.disabled = false;
+    buttons.forEach((b) => { b.disabled = false; });
   }
+}
+
+/** The seeded run is over in ~35s. Without this, a reviewer arriving late sees
+ *  a screen of finished jobs with no indication that anything ever moved. */
+function renderRerunBanner() {
+  const jobs = state.jobOrder.map((id) => state.jobs.get(id)).filter(Boolean);
+  el.rerunBanner.hidden = !(
+    jobs.length > 0 && jobs.every((job) => job.state === 'finished')
+  );
 }
 
 /* ── Render ────────────────────────────────────────────────── */
 
 function render() {
   renderJobs();
+  renderRerunBanner();
   renderDag();
   renderEvents();
 }
@@ -795,6 +810,7 @@ function render() {
 el.btnCompute.addEventListener('click', () => createJob('compute_rack'));
 el.btnStorage.addEventListener('click', () => createJob('storage_rack'));
 el.btnDemo.addEventListener('click', runDemo);
+el.btnRerun.addEventListener('click', runDemo);
 
 // Turning "follow" back on should jump to the newest line immediately.
 el.followToggle.addEventListener('change', () => {

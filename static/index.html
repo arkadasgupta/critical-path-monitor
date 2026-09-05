@@ -40,6 +40,18 @@
   </div>
 </header>
 
+<!-- Shown once every job has finished. The seeded run is over in ~35s, so a
+     reviewer arriving late would otherwise land on a screen of green. -->
+<div class="rerun-banner" id="rerun-banner" hidden>
+  <span class="rerun-dot" aria-hidden="true"></span>
+  <p>
+    <b>Every buildout has finished.</b>
+    A seeded run takes about 35 seconds. Start it again to watch buffer drain in real
+    time &mdash; then block a task and see whether it costs anything.
+  </p>
+  <button class="btn btn-rerun" id="btn-rerun" type="button">Run demo again</button>
+</div>
+
 <main class="layout">
 
   <!-- ── Job list ───────────────────────────────────────────── -->

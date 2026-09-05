@@ -124,6 +124,50 @@ h1, h2 { margin: 0; font-weight: 600; }
 .btn-new { flex: 1; }
 .btn-ghost { background: transparent; }
 
+/* ── Re-run banner ───────────────────────────────────────── */
+
+/* Green, not red: finishing is a success, not a fault. It reads as "that
+   worked, here is how to see it again" rather than as an error. */
+.rerun-banner {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 10px 10px 0;
+  padding: 10px 14px;
+  background: linear-gradient(90deg, rgba(53, 192, 127, .10), rgba(53, 192, 127, .03));
+  border: 1px solid rgba(53, 192, 127, .35);
+  border-radius: var(--radius);
+}
+.rerun-banner[hidden] { display: none; }
+
+.rerun-dot {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--done);
+  box-shadow: 0 0 0 4px rgba(53, 192, 127, .14);
+}
+
+.rerun-banner p {
+  flex: 1;
+  min-width: 220px;
+  margin: 0;
+  font: 400 12.5px/1.45 var(--sans);
+  color: var(--text-dim);
+}
+.rerun-banner p b { color: var(--text); font-weight: 600; }
+
+.btn-rerun {
+  flex: none;
+  background: var(--done);
+  border-color: var(--done);
+  color: #08130d;
+  font-weight: 600;
+}
+.btn-rerun:hover:not(:disabled) { background: #46d894; border-color: #46d894; }
+
 /* ── Layout ──────────────────────────────────────────────── */
 
 .layout {
