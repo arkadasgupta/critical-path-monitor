@@ -51,3 +51,7 @@ to the front of the queue.
 
 **[DESIGN.md](DESIGN.md)** covers why this problem, what makes the approach
 interesting, the design tradeoffs, and what I would build next.
+
+**[transcripts/](transcripts/)** holds the full Claude Code session that built
+this, including the four subagent sessions, converted from the raw logs to
+readable markdown.
