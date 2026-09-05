@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Critical Path Monitor</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-mark" aria-hidden="true"></span>
+    <div class="brand-text">
+      <h1>Critical Path Monitor</h1>
+      <p>Rack buildout delivery risk</p>
+    </div>
+  </div>
+
+  <div class="config-strip" id="config-strip" aria-label="Concurrency limits">
+    <div class="cfg" title="Total jobs held in memory. Creating beyond this returns 429.">
+      <span class="cfg-k">max jobs</span><span class="cfg-v" id="cfg-max-jobs">—</span>
+    </div>
+    <div class="cfg" title="How many jobs may run at once. Others wait.">
+      <span class="cfg-k">concurrent jobs</span><span class="cfg-v" id="cfg-max-conc-jobs">—</span>
+    </div>
+    <div class="cfg" title="Global task worker pool, shared across all jobs. This is why tasks queue.">
+      <span class="cfg-k">task workers</span><span class="cfg-v" id="cfg-max-conc-tasks">—</span>
+    </div>
+    <div class="cfg cfg-muted" title="Real milliseconds per simulated minute.">
+      <span class="cfg-k">tick</span><span class="cfg-v" id="cfg-tick">—</span>
+    </div>
+  </div>
+
+  <div class="topbar-right">
+    <button class="btn btn-ghost" id="btn-demo" type="button">Run demo</button>
+    <div class="link-state" id="link-state" data-state="init">
+      <span class="link-dot" aria-hidden="true"></span><span id="link-label">connecting</span>
+    </div>
+  </div>
+</header>
+
+<main class="layout">
+
+  <!-- ── Job list ───────────────────────────────────────────── -->
+  <section class="panel panel-jobs" aria-label="Jobs">
+    <div class="panel-head">
+      <h2>Jobs</h2>
+      <span class="count" id="job-count"></span>
+    </div>
+    <div class="new-job">
+      <button class="btn btn-new" id="btn-new-compute" type="button">+ Compute rack</button>
+      <button class="btn btn-new" id="btn-new-storage" type="button">+ Storage rack</button>
+    </div>
+    <div class="scroll" id="job-list">
+      <p class="empty">No jobs yet. Create one, or run the demo.</p>
+    </div>
+  </section>
+
+  <!-- ── DAG canvas ─────────────────────────────────────────── -->
+  <section class="panel panel-dag" aria-label="Task graph">
+    <div class="dag-head" id="dag-head">
+      <div class="dag-title">
+        <h2 id="dag-name">No job selected</h2>
+        <span class="wf-tag" id="dag-workflow"></span>
+        <span class="pill" id="dag-state"></span>
+      </div>
+      <div class="readouts" id="dag-readouts"></div>
+    </div>
+
+    <div class="legend" id="dag-legend">
+      <span class="lg"><i class="sw sw-pending"></i>pending</span>
+      <span class="lg"><i class="sw sw-running"></i>running</span>
+      <span class="lg"><i class="sw sw-blocked"></i>blocked</span>
+      <span class="lg"><i class="sw sw-finished"></i>finished</span>
+      <span class="lg-sep"></span>
+      <span class="lg"><i class="sw sw-cp"></i>critical path &mdash; zero buffer, blocking costs delivery time now</span>
+      <span class="lg"><i class="sw sw-slack"></i>has buffer &mdash; blocking is free until it runs out</span>
+      <span class="lg"><i class="sw sw-burn"></i>burning &mdash; buffer spent, delivery time being lost now</span>
+    </div>
+
+    <div class="dag-scroll" id="dag-scroll">
+      <div class="dag-empty" id="dag-empty">Select a job to see its task graph.</div>
+      <svg id="dag-svg" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Task dependency graph" hidden></svg>
+    </div>
+
+    <p class="hint" id="dag-hint" hidden>Click a <b>pending</b> task to block it &middot; click a <b>blocked</b> task to release it</p>
+  </section>
+
+  <!-- ── Event console ──────────────────────────────────────── -->
+  <section class="panel panel-events" aria-label="Event console">
+    <div class="panel-head">
+      <h2>Events</h2>
+      <label class="follow">
+        <input type="checkbox" id="follow-toggle" checked> follow
+      </label>
+    </div>
+    <div class="scroll events" id="event-log">
+      <p class="empty">Waiting for events&hellip;</p>
+    </div>
+  </section>
+
+</main>
+
+<div class="toasts" id="toasts" aria-live="polite"></div>
+
+<script src="/app.js"></script>
+</body>
+</html>
